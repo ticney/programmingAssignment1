@@ -1,14 +1,13 @@
-pollutantmean <- function(directory, pollutant, id= 1:332){
-  workDir <- setwd(directory)
+pollutantmeanMerge <- function(directory, pollutant, id= 1:332){
+  workDir <- setwd(paste(getwd(),"/",directory,sep=""))
   csvId <- list.files(pattern = "*.csv")
-  meanTot <- 0
+  mytempdata <- data.frame("Date" = 0, "sulfate"=0, "nitrate"= 0,"ID"=0)  
   for (val in csvId[id]) {
-    data<-read.csv(val)
-    dataClean<-data[complete.cases(data[,pollutant]),]
-    meanSingle <- mean(dataClean[,pollutant])
-    if(is.nan(meanSingle)){meanTot <- meanTot+meanSingle}
+    mytempdata <- rbind(mytempdata,read.csv(val))
   }
-  meanTot/length(csvId[id])
+  
+  dataClean<-mytempdata[complete.cases(mytempdata[,pollutant]),]
+  
+  mean(dataClean[-1,pollutant])
+  
 }
-
-
